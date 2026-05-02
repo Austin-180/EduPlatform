@@ -1,0 +1,124 @@
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Theme Tokens ── */
+[data-theme="light"] {
+  --bg:          #f0f2f5;
+  --surface:     #ffffff;
+  --surface2:    #f8f9fa;
+  --surface3:    #eef0f3;
+  --border:      #e5e7eb;
+  --border2:     #d1d5db;
+  --text1:       #111827;
+  --text2:       #374151;
+  --text3:       #6b7280;
+  --text4:       #9ca3af;
+  --accent:      #f5c842;
+  --accent-dim:  rgba(245,200,66,0.15);
+  --accent-text: #1a1a1a;
+  --primary:     #4f6ef7;
+  --primary-dim: rgba(79,110,247,0.12);
+  --success:     #22c55e;
+  --danger:      #ef4444;
+  --nav-bg:      #ffffff;
+  --code-bg:     #1e2128;
+  --code-text:   #cdd6f4;
+  --shadow-sm:   0 1px 3px rgba(0,0,0,.07);
+  --shadow-md:   0 4px 16px rgba(0,0,0,.09);
+}
+
+[data-theme="dark"] {
+  --bg:          #13151a;
+  --surface:     #1e2128;
+  --surface2:    #252930;
+  --surface3:    #2d3139;
+  --border:      rgba(255,255,255,0.08);
+  --border2:     rgba(255,255,255,0.14);
+  --text1:       #f0f2f5;
+  --text2:       #c9cdd4;
+  --text3:       #7a8190;
+  --text4:       #4b5260;
+  --accent:      #f5c842;
+  --accent-dim:  rgba(245,200,66,0.12);
+  --accent-text: #1a1a1a;
+  --primary:     #6b8fff;
+  --primary-dim: rgba(107,143,255,0.14);
+  --success:     #4ade80;
+  --danger:      #f87171;
+  --nav-bg:      #1a1d24;
+  --code-bg:     #161920;
+  --code-text:   #cdd6f4;
+  --shadow-sm:   0 1px 3px rgba(0,0,0,.25);
+  --shadow-md:   0 4px 16px rgba(0,0,0,.45);
+}
+
+/* ── Base ── */
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text1);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  transition: background 0.25s, color 0.25s;
+}
+#root { height: 100%; display: flex; flex-direction: column; }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 999px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* ── Buttons ── */
+.btn {
+  padding: 9px 20px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: transform 0.12s, box-shadow 0.12s, opacity 0.15s, background 0.15s;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.btn:active { transform: scale(0.97); }
+.btn:disabled { opacity: 0.4; pointer-events: none; }
+.btn-accent  { background: var(--accent); color: var(--accent-text); box-shadow: 0 2px 12px rgba(245,200,66,.28); }
+.btn-accent:hover { opacity: 0.92; box-shadow: 0 4px 20px rgba(245,200,66,.45); }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover { opacity: 0.88; }
+.btn-ghost   { background: transparent; color: var(--text2); border: 1px solid var(--border2); }
+.btn-ghost:hover { background: var(--surface2); color: var(--text1); }
+.btn-surface { background: var(--surface); color: var(--text2); border: 1px solid var(--border); }
+.btn-surface:hover { background: var(--surface2); }
+.btn-lg { padding: 13px 32px; font-size: 15px; border-radius: 10px; }
+.btn-sm { padding: 5px 12px; font-size: 12px; border-radius: 6px; }
+.icon-btn { width: 32px; height: 32px; border: none; background: none; border-radius: 7px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text3); transition: background 0.12s, color 0.12s; }
+.icon-btn:hover { background: var(--surface2); color: var(--text1); }
+
+/* ── Cards ── */
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; transition: background 0.25s, border-color 0.25s; }
+.card-hover { transition: background 0.25s, border-color 0.25s, box-shadow 0.2s, transform 0.2s; }
+.card-hover:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); border-color: var(--border2); }
+
+/* ── Form ── */
+.form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+.form-label { font-size: 13px; font-weight: 600; color: var(--text2); }
+.form-input { padding: 10px 14px; background: var(--surface2); border: 1px solid var(--border2); border-radius: 8px; font-size: 14px; font-family: inherit; color: var(--text1); outline: none; transition: border-color 0.15s, background 0.15s; width: 100%; }
+.form-input:focus { border-color: var(--primary); background: var(--surface); }
+.form-input::placeholder { color: var(--text4); }
+
+/* ── Section labels ── */
+.section-tag { font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+.section-title { font-size: 26px; font-weight: 800; color: var(--text1); margin-bottom: 8px; letter-spacing: -0.3px; }
+.section-sub { font-size: 14px; color: var(--text3); margin-bottom: 28px; line-height: 1.6; }
+
+/* ── Progress dots ── */
+.pdots { display: flex; gap: 6px; justify-content: center; margin-bottom: 28px; }
+.pdot { width: 8px; height: 8px; border-radius: 50%; background: var(--border2); transition: all 0.2s; }
+.pdot.active { background: var(--accent); width: 24px; border-radius: 4px; }
