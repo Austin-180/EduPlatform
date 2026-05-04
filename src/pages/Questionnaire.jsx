@@ -72,7 +72,7 @@ export default function Questionnaire() {
       learningGoals,
       weeklyTime,
     }))
-    navigate('/dashboard')
+    navigate('/learning-path-confirm')
   }
 
   return (
