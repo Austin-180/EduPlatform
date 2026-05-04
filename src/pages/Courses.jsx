@@ -86,7 +86,7 @@ export default function Courses() {
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <button
               className="btn btn-accent btn-lg"
-              onClick={() => { if (selected) navigate(`/courses/${selected}`) }}
+              onClick={() => { if (selected) navigate('/questionnaire', { state: { courseId: selected } }) }}
               disabled={!selected}
               style={{
                 width: 220, fontWeight: 700, justifyContent: 'center',
