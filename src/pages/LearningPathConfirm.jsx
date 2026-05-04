@@ -56,6 +56,39 @@ function InfoBlock({ icon, label, value }) {
   )
 }
 
+function SummaryCard({ icon, value, label }) {
+  return (
+    <div className="card" style={{
+      padding: '28px 20px',
+      textAlign: 'center',
+      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14,
+    }}>
+      <div style={{
+        width: 48, height: 48,
+        borderRadius: '50%',
+        background: 'var(--surface2)',
+        border: '1px solid var(--border)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontSize: 20, color: 'var(--accent)',
+      }}>
+        {icon}
+      </div>
+      <div>
+        <div style={{ fontSize: 22, fontWeight: 800, color: 'var(--text1)', lineHeight: 1.2, marginBottom: 4 }}>
+          {value}
+        </div>
+        <div style={{ fontSize: 13, color: 'var(--text3)' }}>{label}</div>
+      </div>
+    </div>
+  )
+}
+
+const fadeUp = (delay = 0) => ({
+  initial: { opacity: 0, y: 18 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.38, delay, ease: [0.16, 1, 0.3, 1] },
+})
+
 export default function LearningPathConfirm() {
   const navigate = useNavigate()
   const data     = readOnboarding()
@@ -74,8 +107,7 @@ export default function LearningPathConfirm() {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      justifyContent: 'center',
-      padding: '48px 24px',
+      padding: '48px 24px 64px',
     }}>
       {/* Check icon */}
       <motion.div
@@ -98,9 +130,7 @@ export default function LearningPathConfirm() {
 
       {/* Header */}
       <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.38, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+        {...fadeUp(0.08)}
         style={{ textAlign: 'center', marginBottom: 32 }}
       >
         <h1 style={{
@@ -113,34 +143,30 @@ export default function LearningPathConfirm() {
         </h1>
         <p style={{
           fontSize: 14.5, color: 'var(--text3)',
-          lineHeight: 1.65,
-          maxWidth: 480, margin: '0 auto',
+          lineHeight: 1.65, maxWidth: 480, margin: '0 auto',
         }}>
           Based on your responses, we've crafted a custom curriculum for you
         </p>
       </motion.div>
 
-      {/* Card */}
+      {/* Main card */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.14, ease: [0.16, 1, 0.3, 1] }}
+        {...fadeUp(0.14)}
         className="card"
         style={{
           width: '100%', maxWidth: 680,
           padding: '32px 36px',
           boxShadow: 'var(--shadow-md)',
           display: 'flex', flexDirection: 'column', gap: 22,
+          marginBottom: 24,
         }}
       >
-        {/* Track title */}
         <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--text1)' }}>
           Recommended Track: {track}
         </div>
 
         <Divider />
 
-        {/* Three info blocks */}
         <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           <InfoBlock icon="◎" label="Difficulty Level"   value={diff}   />
           <InfoBlock icon="⏱" label="Estimated Duration" value={dur}    />
@@ -149,7 +175,6 @@ export default function LearningPathConfirm() {
 
         <Divider />
 
-        {/* Your Goals */}
         <div>
           <div style={{ fontSize: 14.5, fontWeight: 700, color: 'var(--text1)', marginBottom: 12 }}>
             Your Goals
@@ -160,14 +185,12 @@ export default function LearningPathConfirm() {
             borderRadius: 10,
             padding: '14px 16px',
             fontSize: 13.5, color: 'var(--text2)',
-            lineHeight: 1.7,
-            minHeight: 52,
+            lineHeight: 1.7, minHeight: 52,
           }}>
             {goals}
           </div>
         </div>
 
-        {/* What You'll Learn */}
         <div>
           <div style={{ fontSize: 14.5, fontWeight: 700, color: 'var(--text1)', marginBottom: 14 }}>
             What You'll Learn
@@ -191,16 +214,27 @@ export default function LearningPathConfirm() {
         </div>
       </motion.div>
 
-      {/* View Study Plan */}
+      {/* Three summary cards */}
       <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35, delay: 0.22, ease: [0.16, 1, 0.3, 1] }}
-        style={{ marginTop: 28 }}
+        {...fadeUp(0.2)}
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: 16,
+          width: '100%', maxWidth: 680,
+          marginBottom: 36,
+        }}
       >
+        <SummaryCard icon="◎" value={diff}    label="Difficulty Level" />
+        <SummaryCard icon="⏱" value={weekly}  label="Study Time"       />
+        <SummaryCard icon="↗" value="4 Weeks" label="Duration"         />
+      </motion.div>
+
+      {/* View Study Plan → goes to roadmap */}
+      <motion.div {...fadeUp(0.26)}>
         <button
           className="btn btn-accent btn-lg"
-          onClick={() => navigate('/dashboard')}
+          onClick={() => navigate('/learning-roadmap')}
           style={{ width: 240, fontWeight: 700, justifyContent: 'center' }}
         >
           View Study Plan
