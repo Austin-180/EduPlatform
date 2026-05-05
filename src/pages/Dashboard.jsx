@@ -1,17 +1,11 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import CourseOutline from '../components/CourseOutline.jsx'
-import CodeSandboxPanel from '../components/CodeSandboxPanel.jsx'
 import ThemeToggle from '../components/ThemeToggle.jsx'
-import FloatingAiChat from '../components/FloatingAiChat.jsx'
-import { CHAPTERS } from '../data/mockData.js'
+import { CHAPTERS, AI_REPLIES } from '../data/mockData.js'
 
-const TABS = [
-  { id: 'summary', label: 'Summary' },
-  { id: 'concepts', label: 'Concepts' },
-  { id: 'mind-map', label: 'Mind Map' },
-]
+const ALL_LESSONS = CHAPTERS.flatMap(ch => ch.lessons)
 
-const LESSON_CONTENT = {
+const LESSON_DATA = {
   l1: {
     summary: 'Programming is the process of writing instructions that a computer executes. Every program — from a calculator to an AI — is built from the same foundational ideas.',
     points: [
@@ -21,6 +15,18 @@ const LESSON_CONTENT = {
       'Control flow (if/else, loops) lets programs react and repeat',
     ],
     note: 'Focus on the "why" behind each concept — it makes advanced topics much easier later.',
+    example: 'x = 5\nname = "Alice"\nprint(name, "is", x, "years old")\n# Output: Alice is 5 years old',
+    concepts: [
+      { title: 'Program', desc: 'A sequence of instructions the computer executes step by step.' },
+      { title: 'Variable', desc: 'A named container that stores a value so you can reference it later.' },
+      { title: 'Function', desc: 'A reusable block of code that performs a specific task.' },
+      { title: 'Control Flow', desc: 'Logic that determines which statements execute and in what order.' },
+      { title: 'Syntax', desc: 'The set of rules defining how code must be written and structured.' },
+      { title: 'Runtime', desc: 'The environment that executes your code after it is written.' },
+    ],
+    mindMap: { center: 'Core Concepts', branches: ['Program', 'Variable', 'Function', 'Control Flow', 'Syntax', 'Runtime'] },
+    sandbox: 'Print "Hello, World!" to the console using the print() function.',
+    sandboxCode: '# Print Hello, World!\nprint("Hello, World!")',
   },
   l2: {
     summary: 'Before writing code, you need the right tools. A well-configured environment reduces friction so you can focus on learning instead of fighting tooling.',
@@ -31,6 +37,18 @@ const LESSON_CONTENT = {
       'Error messages tell you exactly what went wrong — read them carefully',
     ],
     note: 'Spend time here. A broken environment doubles the time it takes to learn anything.',
+    example: '$ python --version\nPython 3.11.0\n\n$ python hello.py\nHello, World!',
+    concepts: [
+      { title: 'IDE', desc: 'Integrated Development Environment — a text editor purpose-built for coding.' },
+      { title: 'Terminal', desc: 'A text interface for running commands, scripts, and programs.' },
+      { title: 'Runtime', desc: 'The environment that executes your code (e.g., Python interpreter).' },
+      { title: 'Package Manager', desc: 'A tool for installing and managing code libraries (pip, npm).' },
+      { title: 'Git', desc: 'A version control system for tracking changes and collaborating.' },
+      { title: 'Debugger', desc: 'A tool for stepping through code to find and fix errors.' },
+    ],
+    mindMap: { center: 'Dev Environment', branches: ['IDE / Editor', 'Terminal', 'Runtime', 'Package Manager', 'Git', 'Debugger'] },
+    sandbox: 'Create a variable called greeting with value "Hello" and print it.',
+    sandboxCode: '# Set up a variable and print it\ngreeting = "Hello"\nprint(greeting)',
   },
   l3: {
     summary: 'Every language shares a set of core building blocks. Master these and learning new languages becomes significantly faster.',
@@ -41,219 +59,643 @@ const LESSON_CONTENT = {
       'Comments explain intent — write them for your future self',
     ],
     note: 'Type out every example by hand. Reading code and writing code use different parts of your brain.',
-  },
-  l4: {
-    summary: 'Exercises bridge theory and practice. The first practical exercise reinforces the core concepts from the previous lessons through hands-on problem solving.',
-    points: [
-      'Read the problem statement fully before writing a single line',
-      'Break the problem into smaller steps on paper first',
-      'Test with simple inputs before edge cases',
-      'A failing test tells you exactly what still needs fixing',
+    example: 'age = 25           # integer\nname = "Alice"     # string\nactive = True      # boolean\n\nprint(type(age))   # <class \'int\'>',
+    concepts: [
+      { title: 'Data Types', desc: 'Categories of values: int, float, str, bool, list, dict.' },
+      { title: 'Operators', desc: 'Symbols that perform operations on values (+, -, ==, >, and, or).' },
+      { title: 'Expression', desc: 'Code that evaluates to a value (e.g., 2 + 3, name.upper()).' },
+      { title: 'Statement', desc: 'Code that performs an action (assignment, print, if-block).' },
+      { title: 'Comment', desc: 'Text ignored by the computer — explains intent to human readers.' },
+      { title: 'Keyword', desc: 'Reserved words the language uses for special syntax (if, for, def).' },
     ],
-    note: 'Struggling with an exercise for 20 minutes teaches more than reading the solution immediately.',
-  },
-  l5: {
-    summary: 'Variables are named containers that hold values. Data types define what kind of value a variable can store and what operations are valid on it.',
-    points: [
-      'Integers hold whole numbers; floats hold decimals',
-      'Strings are sequences of characters, typically in quotes',
-      'Booleans hold true or false — the basis of all logic',
-      'Type errors occur when you mix incompatible types in an operation',
-    ],
-    note: 'Most bugs in beginner code come from unexpected types. When in doubt, print the type.',
-  },
-  l6: {
-    summary: 'Control flow determines the order statements execute. Without it, every program would run the same way every time — which is rarely useful.',
-    points: [
-      'if/else branches execute different code based on a condition',
-      'for loops repeat a block a known number of times',
-      'while loops repeat until a condition becomes false',
-      'break and continue give you fine-grained loop control',
-    ],
-    note: 'Trace through loops manually with small examples to build intuition before writing complex ones.',
+    mindMap: { center: 'Language Basics', branches: ['Data Types', 'Operators', 'Expressions', 'Statements', 'Comments', 'Keywords'] },
+    sandbox: 'Declare an integer, a string, and a boolean variable. Print all three.',
+    sandboxCode: '# Declare three types of variables\nage = 25\nname = "Alice"\nactive = True\n\nprint(age, name, active)',
   },
 }
 
-function getFallbackContent(lesson) {
-  return {
-    summary: 'This lesson\'s detailed content will appear here once available. Select a completed lesson to explore the material.',
-    points: ['Content coming soon'],
+function getLessonData(id) {
+  return LESSON_DATA[id] ?? {
+    summary: 'This lesson\'s content will appear here once available. Select a completed lesson to explore the material.',
+    points: ['Check back after completing prerequisite lessons.'],
     note: null,
-    title: lesson?.title,
+    example: '# Example code will appear here\npass',
+    concepts: [{ title: 'Coming Soon', desc: 'Concepts for this lesson will be available once unlocked.' }],
+    mindMap: { center: 'Topic', branches: ['Coming Soon'] },
+    sandbox: 'This exercise will be available once the lesson is unlocked.',
+    sandboxCode: '# Write your solution here\n',
   }
 }
 
-function LessonContentPanel({ lessonId }) {
-  let lesson = null
+function getLessonMeta(id) {
   for (const ch of CHAPTERS) {
-    const found = ch.lessons.find(l => l.id === lessonId)
-    if (found) { lesson = found; break }
+    const found = ch.lessons.find(l => l.id === id)
+    if (found) return found
   }
-  const content = LESSON_CONTENT[lessonId] ?? getFallbackContent(lesson)
+  return null
+}
+
+// ─── Shared micro-components ──────────────────────────────────────────────────
+
+function Label({ children }) {
+  return (
+    <div style={{ fontSize: 10.5, fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+      {children}
+    </div>
+  )
+}
+
+function ContentBlock({ label, children }) {
+  return (
+    <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 8, padding: '16px 20px', marginBottom: 16 }}>
+      <div style={{ fontSize: 10.5, fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 14 }}>{label}</div>
+      {children}
+    </div>
+  )
+}
+
+// ─── Lesson (default view) ────────────────────────────────────────────────────
+
+function LessonPanel({ lessonId }) {
+  const meta = getLessonMeta(lessonId)
+  const d = getLessonData(lessonId)
 
   return (
-    <div style={{
-      flex: 1,
-      overflowY: 'auto',
-      background: 'var(--surface)',
-      borderRadius: '0 0 8px 8px',
-      border: '1px solid var(--border)',
-      borderTop: 'none',
-      padding: '24px 28px',
-    }}>
-      {/* Title row */}
+    <div style={{ flex: 1, overflowY: 'auto', padding: '24px 28px' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18, flexWrap: 'wrap' }}>
         <h2 style={{ fontSize: 17, fontWeight: 700, color: 'var(--text1)', margin: 0 }}>
-          {content.title ?? lesson?.title ?? 'Lesson'}
+          {meta?.title ?? 'Lesson'}
         </h2>
-        {lesson && (
-          <span style={{
-            fontSize: 11, fontWeight: 600,
-            background: 'var(--accent)', color: 'var(--accent-text)',
-            padding: '2px 9px', borderRadius: 20,
-          }}>
-            {lesson.time}
+        {meta && (
+          <span style={{ fontSize: 11, fontWeight: 600, background: 'var(--accent)', color: 'var(--accent-text)', padding: '2px 9px', borderRadius: 20 }}>
+            {meta.time}
           </span>
         )}
       </div>
-
-      {/* Summary */}
-      <p style={{ fontSize: 13.5, lineHeight: 1.8, color: 'var(--text2)', margin: '0 0 20px' }}>
-        {content.summary}
-      </p>
-
-      {/* Key Points */}
-      <div style={{
-        background: 'var(--bg)',
-        border: '1px solid var(--border)',
-        borderRadius: 8,
-        padding: '16px 20px',
-        marginBottom: 16,
-      }}>
-        <div style={{
-          fontSize: 10.5, fontWeight: 700, color: 'var(--accent)',
-          textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 14,
-        }}>
-          Key Points
-        </div>
+      <p style={{ fontSize: 13.5, lineHeight: 1.8, color: 'var(--text2)', margin: '0 0 20px' }}>{d.summary}</p>
+      <ContentBlock label="Key Points">
         <ul style={{ margin: 0, paddingLeft: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 11 }}>
-          {content.points.map((pt, i) => (
+          {d.points.map((pt, i) => (
             <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
               <span style={{ color: 'var(--accent)', fontWeight: 700, flexShrink: 0, marginTop: 1 }}>→</span>
               <span style={{ fontSize: 13.5, color: 'var(--text2)', lineHeight: 1.65 }}>{pt}</span>
             </li>
           ))}
         </ul>
-      </div>
-
-      {/* Note */}
-      {content.note && (
-        <div style={{
-          background: 'var(--bg)',
-          border: '1px solid var(--border)',
-          borderLeft: '3px solid var(--accent)',
-          borderRadius: '0 8px 8px 0',
-          padding: '12px 16px',
-        }}>
-          <span style={{ fontSize: 13, color: 'var(--text3)', lineHeight: 1.7, fontStyle: 'italic' }}>
-            💡 {content.note}
-          </span>
+      </ContentBlock>
+      <ContentBlock label="Example">
+        <pre style={{ margin: 0, fontSize: 12.5, color: 'var(--text2)', fontFamily: 'monospace', whiteSpace: 'pre-wrap', lineHeight: 1.7 }}>{d.example}</pre>
+      </ContentBlock>
+      {d.note && (
+        <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderLeft: '3px solid var(--accent)', borderRadius: '0 8px 8px 0', padding: '12px 16px' }}>
+          <span style={{ fontSize: 13, color: 'var(--text3)', lineHeight: 1.7, fontStyle: 'italic' }}>💡 {d.note}</span>
         </div>
       )}
     </div>
   )
 }
 
-function PlaceholderPanel({ label }) {
+// ─── Summary ──────────────────────────────────────────────────────────────────
+
+function SummaryPanel({ lessonId }) {
+  const meta = getLessonMeta(lessonId)
+  const d = getLessonData(lessonId)
+
   return (
-    <div style={{
-      flex: 1,
-      background: 'var(--surface)',
-      borderRadius: '0 0 8px 8px',
-      border: '1px solid var(--border)',
-      borderTop: 'none',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      flexDirection: 'column', gap: 8,
-    }}>
-      <span style={{ fontSize: 22, opacity: 0.3 }}>🚧</span>
-      <span style={{ fontSize: 13, color: 'var(--text2)', fontWeight: 500 }}>{label} — Coming Soon</span>
+    <div style={{ flex: 1, overflowY: 'auto', padding: '24px 28px' }}>
+      <Label>Chapter Summary</Label>
+      <h2 style={{ fontSize: 17, fontWeight: 700, color: 'var(--text1)', margin: '8px 0 16px' }}>
+        {meta?.title ?? 'Lesson'}
+      </h2>
+      <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 8, padding: '16px 20px', marginBottom: 24 }}>
+        <p style={{ margin: 0, fontSize: 14, lineHeight: 1.85, color: 'var(--text2)' }}>{d.summary}</p>
+      </div>
+      <Label>Key Takeaways</Label>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 12 }}>
+        {d.points.map((pt, i) => (
+          <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 8, padding: '12px 16px' }}>
+            <span style={{ background: 'var(--accent)', color: 'var(--accent-text)', fontWeight: 700, fontSize: 11, padding: '2px 8px', borderRadius: 12, flexShrink: 0 }}>{i + 1}</span>
+            <span style={{ fontSize: 13.5, color: 'var(--text2)', lineHeight: 1.6 }}>{pt}</span>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
 
+// ─── Concepts ─────────────────────────────────────────────────────────────────
+
+function ConceptsPanel({ lessonId }) {
+  const meta = getLessonMeta(lessonId)
+  const d = getLessonData(lessonId)
+
+  return (
+    <div style={{ flex: 1, overflowY: 'auto', padding: '24px 28px' }}>
+      <Label>Key Concepts</Label>
+      <h2 style={{ fontSize: 17, fontWeight: 700, color: 'var(--text1)', margin: '8px 0 20px' }}>
+        {meta?.title ?? 'Lesson'}
+      </h2>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))', gap: 14 }}>
+        {d.concepts.map((c, i) => (
+          <div key={i} style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 10, padding: '18px 16px' }}>
+            <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--text1)', marginBottom: 8 }}>{c.title}</div>
+            <div style={{ fontSize: 12.5, color: 'var(--text2)', lineHeight: 1.6 }}>{c.desc}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// ─── Mind Map ─────────────────────────────────────────────────────────────────
+
+function MindMapPanel({ lessonId }) {
+  const d = getLessonData(lessonId)
+  const { center, branches } = d.mindMap
+
+  return (
+    <div style={{ flex: 1, overflowY: 'auto', padding: '32px 28px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Label>Mind Map</Label>
+      <div style={{ marginTop: 36, display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+        <div style={{ background: 'var(--accent)', color: 'var(--accent-text)', fontWeight: 700, fontSize: 15, padding: '12px 28px', borderRadius: 30 }}>
+          {center}
+        </div>
+        <div style={{ width: 2, height: 28, background: 'var(--border)' }} />
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center', maxWidth: 560 }}>
+          {branches.map((b, i) => (
+            <div key={i} style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 20, padding: '8px 20px', fontSize: 13, color: 'var(--text2)', fontWeight: 500 }}>
+              {b}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ─── AI Tutor ─────────────────────────────────────────────────────────────────
+
+function AiTutorPanel() {
+  const [messages, setMessages] = useState([
+    { role: 'ai', text: "Hi! I'm your AI tutor. Ask me anything about this lesson or programming in general." },
+  ])
+  const [input, setInput] = useState('')
+  const bottomRef = useRef(null)
+
+  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }) }, [messages])
+
+  function send() {
+    const text = input.trim()
+    if (!text) return
+    const reply = AI_REPLIES[Math.floor(Math.random() * AI_REPLIES.length)]
+    setMessages(prev => [...prev, { role: 'user', text }, { role: 'ai', text: reply }])
+    setInput('')
+  }
+
+  return (
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+      <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--border)', flexShrink: 0 }}>
+        <Label>AI Tutor</Label>
+      </div>
+      <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+        {messages.map((m, i) => (
+          <div key={i} style={{ display: 'flex', justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start' }}>
+            <div style={{
+              maxWidth: '76%', padding: '10px 14px',
+              borderRadius: m.role === 'user' ? '12px 12px 4px 12px' : '12px 12px 12px 4px',
+              background: m.role === 'user' ? 'var(--accent)' : 'var(--bg)',
+              color: m.role === 'user' ? 'var(--accent-text)' : 'var(--text2)',
+              border: m.role === 'user' ? 'none' : '1px solid var(--border)',
+              fontSize: 13.5, lineHeight: 1.65,
+            }}>
+              {m.text}
+            </div>
+          </div>
+        ))}
+        <div ref={bottomRef} />
+      </div>
+      <div style={{ padding: '12px 16px', borderTop: '1px solid var(--border)', display: 'flex', gap: 8, flexShrink: 0 }}>
+        <input
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && send()}
+          placeholder="Ask a question about this lesson..."
+          style={{ flex: 1, background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 8, padding: '8px 12px', fontSize: 13.5, color: 'var(--text1)', outline: 'none' }}
+        />
+        <button onClick={send} style={{ background: 'var(--accent)', color: 'var(--accent-text)', border: 'none', cursor: 'pointer', padding: '8px 16px', borderRadius: 8, fontSize: 13, fontWeight: 600 }}>
+          Send
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// ─── Sandbox ──────────────────────────────────────────────────────────────────
+
+function SandboxPanel({ lessonId }) {
+  const d = getLessonData(lessonId)
+  const [code, setCode] = useState(d.sandboxCode)
+  const [output, setOutput] = useState('')
+
+  function run() {
+    setOutput('> Running program...\n> Hello, World!\n>\n> ✓ Execution complete (0.0s)')
+  }
+
+  return (
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+      <div style={{ padding: '12px 20px', background: 'var(--bg)', borderBottom: '1px solid var(--border)', flexShrink: 0 }}>
+        <div style={{ fontSize: 10.5, fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>Problem</div>
+        <p style={{ margin: 0, fontSize: 13.5, color: 'var(--text2)', lineHeight: 1.6 }}>{d.sandbox}</p>
+      </div>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        <div style={{ padding: '6px 12px 6px 16px', background: '#12122a', borderBottom: '1px solid #2a2a4a', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
+          <span style={{ fontSize: 11, color: '#888', fontFamily: 'monospace' }}>main.py</span>
+          <button onClick={run} style={{ background: 'var(--accent)', color: 'var(--accent-text)', border: 'none', cursor: 'pointer', padding: '4px 14px', borderRadius: 6, fontSize: 12, fontWeight: 600 }}>
+            ▶ Run
+          </button>
+        </div>
+        <textarea
+          value={code}
+          onChange={e => setCode(e.target.value)}
+          spellCheck={false}
+          style={{ flex: 1, background: '#0d0d1f', color: '#e0e0ff', border: 'none', outline: 'none', padding: '16px', fontFamily: 'monospace', fontSize: 13, lineHeight: 1.7, resize: 'none' }}
+        />
+      </div>
+      <div style={{ height: 110, background: '#060610', borderTop: '1px solid #1a1a3a', padding: '10px 16px', overflow: 'auto', flexShrink: 0 }}>
+        <div style={{ fontSize: 10.5, fontWeight: 700, color: '#555', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>Output</div>
+        <pre style={{ margin: 0, fontSize: 12, color: '#00ee77', fontFamily: 'monospace', lineHeight: 1.6 }}>
+          {output || '> Click ▶ Run to execute your code'}
+        </pre>
+      </div>
+    </div>
+  )
+}
+
+// ─── Settings ─────────────────────────────────────────────────────────────────
+
+function SettingsRow({ label, value }) {
+  return (
+    <div style={{ padding: '12px 0', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <span style={{ fontSize: 13.5, color: 'var(--text2)' }}>{label}</span>
+      <span style={{ fontSize: 13, color: 'var(--text3)' }}>{value}</span>
+    </div>
+  )
+}
+
+function SettingsSection({ title, children }) {
+  return (
+    <div style={{ marginBottom: 28 }}>
+      <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text3)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 8 }}>{title}</div>
+      <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 10, padding: '0 16px' }}>
+        {children}
+      </div>
+    </div>
+  )
+}
+
+function SettingsPanel() {
+  const [language, setLanguage] = useState('English')
+  const [speed, setSpeed] = useState('Standard')
+  const [notifications, setNotifications] = useState(true)
+
+  const selectStyle = {
+    background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 6,
+    padding: '4px 10px', fontSize: 13, color: 'var(--text1)', cursor: 'pointer',
+  }
+
+  return (
+    <div style={{ flex: 1, overflowY: 'auto', padding: '24px 28px' }}>
+      <Label>Settings</Label>
+      <div style={{ marginTop: 20 }}>
+        <SettingsSection title="Account">
+          <SettingsRow label="Name" value="Austin" />
+          <SettingsRow label="Email" value="austinting1288@gmail.com" />
+          <div style={{ padding: '12px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: 13.5, color: 'var(--text2)' }}>Plan</span>
+            <span style={{ fontSize: 12, fontWeight: 600, background: 'var(--accent)', color: 'var(--accent-text)', padding: '2px 10px', borderRadius: 12 }}>Student — Free</span>
+          </div>
+        </SettingsSection>
+
+        <SettingsSection title="Appearance">
+          <div style={{ padding: '12px 0', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: 13.5, color: 'var(--text2)' }}>Dark Mode</span>
+            <span style={{ fontSize: 12.5, color: 'var(--text3)', fontStyle: 'italic' }}>Use the toggle in the top-right header</span>
+          </div>
+          <div style={{ padding: '12px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: 13.5, color: 'var(--text2)' }}>Interface Language</span>
+            <select value={language} onChange={e => setLanguage(e.target.value)} style={selectStyle}>
+              <option>English</option>
+              <option>繁體中文</option>
+              <option>日本語</option>
+            </select>
+          </div>
+        </SettingsSection>
+
+        <SettingsSection title="Learning Preferences">
+          <div style={{ padding: '12px 0', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: 13.5, color: 'var(--text2)' }}>Learning Speed</span>
+            <select value={speed} onChange={e => setSpeed(e.target.value)} style={selectStyle}>
+              <option>Relaxed</option>
+              <option>Standard</option>
+              <option>Intensive</option>
+            </select>
+          </div>
+          <div style={{ padding: '12px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: 13.5, color: 'var(--text2)' }}>Email Notifications</span>
+            <button
+              onClick={() => setNotifications(n => !n)}
+              style={{
+                width: 44, height: 24, borderRadius: 12, border: 'none', cursor: 'pointer',
+                background: notifications ? 'var(--accent)' : 'var(--border)',
+                transition: 'background 0.2s', position: 'relative', flexShrink: 0,
+              }}
+            >
+              <span style={{
+                position: 'absolute', top: 2, left: notifications ? 22 : 2,
+                width: 20, height: 20, borderRadius: '50%', background: '#fff',
+                transition: 'left 0.2s', display: 'block',
+              }} />
+            </button>
+          </div>
+        </SettingsSection>
+      </div>
+    </div>
+  )
+}
+
+// ─── Right Sidebar: Code Sandbox ─────────────────────────────────────────────
+
+function RightSandboxPanel() {
+  const [code, setCode] = useState('// Write your code here...\n')
+  const [output, setOutput] = useState('')
+
+  function runCode() {
+    setOutput('> Running...\n> Hello, World!\n>\n> ✓ No errors found.')
+  }
+
+  return (
+    <div style={{
+      width: 340, flexShrink: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden',
+      background: 'var(--surface)', borderRadius: 8, border: '1px solid var(--border)',
+    }}>
+      <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border)', flexShrink: 0 }}>
+        <div style={{ fontSize: 10.5, fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Code Sandbox</div>
+      </div>
+      <textarea
+        value={code}
+        onChange={e => setCode(e.target.value)}
+        spellCheck={false}
+        style={{
+          flex: 1, background: '#0d0d1f', color: '#e0e0ff', border: 'none', outline: 'none',
+          padding: '14px', fontFamily: 'monospace', fontSize: 12.5, lineHeight: 1.7, resize: 'none',
+        }}
+      />
+      <div style={{ padding: '10px 12px', borderTop: '1px solid var(--border)', flexShrink: 0 }}>
+        <button
+          onClick={runCode}
+          style={{
+            width: '100%', background: 'var(--accent)', color: 'var(--accent-text)',
+            border: 'none', cursor: 'pointer', padding: '8px', borderRadius: 6,
+            fontSize: 13, fontWeight: 600,
+          }}
+        >▶ Run & Debug</button>
+      </div>
+      <div style={{
+        height: 90, background: '#060610', borderTop: '1px solid #1a1a3a',
+        padding: '10px 14px', overflow: 'auto', flexShrink: 0,
+      }}>
+        <div style={{ fontSize: 10.5, fontWeight: 700, color: '#555', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>Output</div>
+        <pre style={{ margin: 0, fontSize: 11.5, color: '#00ee77', fontFamily: 'monospace', lineHeight: 1.55 }}>
+          {output || 'Ready to run your code...'}
+        </pre>
+      </div>
+    </div>
+  )
+}
+
+// ─── Floating AI Chat ─────────────────────────────────────────────────────────
+
+function FloatingAiChat({ open, onToggle }) {
+  const [messages, setMessages] = useState([
+    { role: 'ai', text: 'Ask me anything about this lesson...' },
+  ])
+  const [input, setInput] = useState('')
+  const bottomRef = useRef(null)
+
+  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }) }, [messages])
+
+  function send() {
+    const text = input.trim()
+    if (!text) return
+    const reply = AI_REPLIES[Math.floor(Math.random() * AI_REPLIES.length)]
+    setMessages(prev => [...prev, { role: 'user', text }, { role: 'ai', text: reply }])
+    setInput('')
+  }
+
+  return (
+    <div style={{ position: 'fixed', bottom: 24, right: 24, zIndex: 1000, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 12 }}>
+      {open && (
+        <div style={{
+          width: 320, height: 400, background: 'var(--surface)', border: '1px solid var(--border)',
+          borderRadius: 12, display: 'flex', flexDirection: 'column', overflow: 'hidden',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+        }}>
+          <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
+            <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text1)' }}>AI Tutor</span>
+            <button onClick={onToggle} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text3)', fontSize: 18, lineHeight: 1, padding: '0 2px' }}>×</button>
+          </div>
+          <div style={{ flex: 1, overflowY: 'auto', padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {messages.map((m, i) => (
+              <div key={i} style={{ display: 'flex', justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start' }}>
+                <div style={{
+                  maxWidth: '82%', padding: '8px 12px',
+                  borderRadius: m.role === 'user' ? '10px 10px 3px 10px' : '10px 10px 10px 3px',
+                  background: m.role === 'user' ? 'var(--accent)' : 'var(--bg)',
+                  color: m.role === 'user' ? 'var(--accent-text)' : 'var(--text2)',
+                  border: m.role === 'user' ? 'none' : '1px solid var(--border)',
+                  fontSize: 13, lineHeight: 1.55,
+                }}>{m.text}</div>
+              </div>
+            ))}
+            <div ref={bottomRef} />
+          </div>
+          <div style={{ padding: '10px 12px', borderTop: '1px solid var(--border)', display: 'flex', gap: 6, flexShrink: 0 }}>
+            <input
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && send()}
+              placeholder="Ask a question..."
+              style={{ flex: 1, background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 6, padding: '6px 10px', fontSize: 13, color: 'var(--text1)', outline: 'none' }}
+            />
+            <button onClick={send} style={{ background: 'var(--accent)', color: 'var(--accent-text)', border: 'none', cursor: 'pointer', padding: '6px 12px', borderRadius: 6, fontSize: 12.5, fontWeight: 600 }}>Send</button>
+          </div>
+        </div>
+      )}
+      <button
+        onClick={onToggle}
+        title="AI Tutor"
+        style={{
+          width: 52, height: 52, borderRadius: '50%', background: 'var(--accent)', color: 'var(--accent-text)',
+          border: 'none', cursor: 'pointer', fontSize: 22, display: 'flex', alignItems: 'center', justifyContent: 'center',
+          boxShadow: '0 4px 16px rgba(0,0,0,0.25)', transition: 'transform 0.15s',
+        }}
+      >✨</button>
+    </div>
+  )
+}
+
+// ─── Dashboard ────────────────────────────────────────────────────────────────
+
+const LEFT_TOOLS = [
+  { id: 'summary', label: 'Summary' },
+  { id: 'concepts', label: 'Concepts' },
+  { id: 'mind-map', label: 'Mind Map' },
+]
+
+const RIGHT_TOOLS = [
+  { id: 'ai-tutor', label: 'AI Tutor' },
+  { id: 'sandbox', label: 'Sandbox' },
+]
+
 export default function Dashboard() {
   const [activeLesson, setActiveLesson] = useState('l1')
-  const [activeTab, setActiveTab] = useState('summary')
+  const [activeTool, setActiveTool] = useState('lesson')
+  const [aiOpen, setAiOpen] = useState(false)
+
+  const currentIdx = ALL_LESSONS.findIndex(l => l.id === activeLesson)
+  const hasNext = currentIdx < ALL_LESSONS.length - 1
+
+  function skipChapter() {
+    if (!hasNext) return
+    setActiveLesson(ALL_LESSONS[currentIdx + 1].id)
+    setActiveTool('lesson')
+  }
+
+  function handleToolClick(id) {
+    setActiveTool(prev => prev === id ? 'lesson' : id)
+  }
+
+  function handleLessonSelect(id) {
+    setActiveLesson(id)
+    setActiveTool('lesson')
+  }
 
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', background: 'var(--bg)' }}>
       {/* Top bar */}
       <header style={{
-        height: 52, flexShrink: 0,
-        background: 'var(--surface)',
+        height: 52, flexShrink: 0, background: 'var(--surface)',
         borderBottom: '1px solid var(--border)',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '0 16px',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <div style={{ width: 24, height: 24, borderRadius: 6, background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: 13, color: 'var(--accent-text)' }}>E</div>
           <span style={{ fontSize: 13.5, fontWeight: 700, color: 'var(--text1)' }}>EduPlatform</span>
         </div>
-        <ThemeToggle />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <button
+            onClick={() => handleToolClick('settings')}
+            style={{
+              background: activeTool === 'settings' ? 'var(--accent)' : 'none',
+              border: '1px solid', borderColor: activeTool === 'settings' ? 'var(--accent)' : 'var(--border)',
+              cursor: 'pointer', padding: '5px 12px', borderRadius: 6,
+              fontSize: 12.5, fontWeight: activeTool === 'settings' ? 600 : 400,
+              color: activeTool === 'settings' ? 'var(--accent-text)' : 'var(--text2)',
+              transition: 'all 0.15s',
+            }}
+          >Settings</button>
+          <ThemeToggle />
+        </div>
       </header>
 
-      {/* Three-column body */}
+      {/* Toolbar */}
+      <div style={{
+        flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        background: 'var(--surface)', borderBottom: '1px solid var(--border)', padding: '0 16px',
+      }}>
+        {/* Left: lesson view tools */}
+        <div style={{ display: 'flex', gap: 2 }}>
+          {LEFT_TOOLS.map(t => {
+            const active = activeTool === t.id
+            return (
+              <button
+                key={t.id}
+                onClick={() => handleToolClick(t.id)}
+                style={{
+                  background: 'none', border: 'none', cursor: 'pointer',
+                  padding: '10px 14px', fontSize: 13, fontWeight: active ? 600 : 400,
+                  color: active ? 'var(--accent)' : 'var(--text2)',
+                  borderBottom: active ? '2px solid var(--accent)' : '2px solid transparent',
+                  transition: 'color 0.15s, border-color 0.15s', marginBottom: -1,
+                }}
+              >{t.label}</button>
+            )
+          })}
+        </div>
+
+        {/* Right: tool + action buttons */}
+        <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+          {RIGHT_TOOLS.map(t => {
+            const active = activeTool === t.id
+            return (
+              <button
+                key={t.id}
+                onClick={() => handleToolClick(t.id)}
+                style={{
+                  background: active ? 'var(--accent)' : 'none',
+                  border: '1px solid', borderColor: active ? 'var(--accent)' : 'var(--border)',
+                  cursor: 'pointer', padding: '5px 12px', borderRadius: 6,
+                  fontSize: 12.5, fontWeight: active ? 600 : 400,
+                  color: active ? 'var(--accent-text)' : 'var(--text2)',
+                  transition: 'all 0.15s',
+                }}
+              >{t.label}</button>
+            )
+          })}
+          <button
+            onClick={skipChapter}
+            disabled={!hasNext}
+            title={hasNext ? 'Go to next lesson' : 'Already at last chapter'}
+            style={{
+              background: 'none', border: '1px solid var(--border)', cursor: hasNext ? 'pointer' : 'default',
+              padding: '5px 12px', borderRadius: 6, fontSize: 12.5, fontWeight: 400,
+              color: hasNext ? 'var(--text2)' : 'var(--text3)',
+              opacity: hasNext ? 1 : 0.45, transition: 'all 0.15s',
+            }}
+          >
+            {hasNext ? 'Skip Chapter →' : 'Last Chapter'}
+          </button>
+        </div>
+      </div>
+
+      {/* Body: left nav + center content */}
       <div style={{ flex: 1, display: 'flex', overflow: 'hidden', padding: '12px', gap: '12px' }}>
         <CourseOutline
           chapters={CHAPTERS}
           activeLesson={activeLesson}
-          onSelectLesson={setActiveLesson}
+          onSelectLesson={handleLessonSelect}
         />
 
-        {/* Middle column: tabs + lesson content */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
-          {/* Tab bar */}
-          <div style={{
-            flexShrink: 0,
-            display: 'flex', gap: 4,
-            background: 'var(--surface)',
-            borderRadius: '8px 8px 0 0',
-            border: '1px solid var(--border)',
-            borderBottom: 'none',
-            padding: '0 8px',
-          }}>
-            {TABS.map(tab => {
-              const isActive = activeTab === tab.id
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  style={{
-                    background: 'none', border: 'none', cursor: 'pointer',
-                    padding: '10px 14px',
-                    fontSize: 13, fontWeight: isActive ? 600 : 400,
-                    color: isActive ? 'var(--accent)' : 'var(--text2)',
-                    borderBottom: isActive ? '2px solid var(--accent)' : '2px solid transparent',
-                    transition: 'color 0.15s, border-color 0.15s',
-                    marginBottom: -1,
-                  }}
-                >
-                  {tab.label}
-                </button>
-              )
-            })}
-          </div>
-
-          {/* Tab content */}
-          {activeTab === 'summary' && <LessonContentPanel lessonId={activeLesson} />}
-          {activeTab === 'concepts' && <PlaceholderPanel label="Concepts" />}
-          {activeTab === 'mind-map' && <PlaceholderPanel label="Mind Map" />}
+        {/* Center panel */}
+        <div style={{
+          flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0,
+          background: 'var(--surface)', borderRadius: 8, border: '1px solid var(--border)',
+        }}>
+          {activeTool === 'lesson'   && <LessonPanel   lessonId={activeLesson} />}
+          {activeTool === 'summary'  && <SummaryPanel  lessonId={activeLesson} />}
+          {activeTool === 'concepts' && <ConceptsPanel lessonId={activeLesson} />}
+          {activeTool === 'mind-map' && <MindMapPanel  lessonId={activeLesson} />}
+          {activeTool === 'ai-tutor' && <AiTutorPanel  key={activeLesson} />}
+          {activeTool === 'sandbox'  && <SandboxPanel  lessonId={activeLesson} key={activeLesson} />}
+          {activeTool === 'settings' && <SettingsPanel />}
         </div>
 
-        <CodeSandboxPanel />
+        {/* Right sidebar: always-visible Code Sandbox */}
+        <RightSandboxPanel />
       </div>
 
-      <FloatingAiChat />
+      {/* Floating AI chat button */}
+      <FloatingAiChat open={aiOpen} onToggle={() => setAiOpen(o => !o)} />
     </div>
   )
 }
