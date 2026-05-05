@@ -1,12 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import ThemeToggle from '../components/ThemeToggle.jsx'
-
-const SOCIAL_BTNS = [
-  { label: 'Sign in with Google',   icon: 'G', iconColor: '#4285f4' },
-  { label: 'Sign in with Apple',    icon: '',  iconColor: 'var(--text1)' },
-  { label: 'Sign in with Facebook', icon: 'f', iconColor: '#1877f2' },
-]
+import { useLanguage } from '../context/LanguageContext.jsx'
 
 function SocialButton({ label, icon, iconColor, onClick }) {
   return (
@@ -36,7 +31,14 @@ function SocialButton({ label, icon, iconColor, onClick }) {
 
 export default function Login() {
   const navigate = useNavigate()
+  const { t } = useLanguage()
   const go = () => navigate('/dashboard')
+
+  const SOCIAL_BTNS = [
+    { label: t('signInGoogle'),   icon: 'G', iconColor: '#4285f4' },
+    { label: t('signInApple'),    icon: '',  iconColor: 'var(--text1)' },
+    { label: t('signInFacebook'), icon: 'f', iconColor: '#1877f2' },
+  ]
 
   return (
     <div style={{
@@ -59,36 +61,30 @@ export default function Login() {
         className="card"
         style={{ width: '100%', maxWidth: 400, padding: '40px 36px', boxShadow: 'var(--shadow-md)' }}
       >
-        {/* Star icon */}
         <div style={{ textAlign: 'center', marginBottom: 16 }}>
           <span style={{ fontSize: 40, lineHeight: 1 }}>✨</span>
         </div>
 
-        {/* Title */}
         <h1 style={{ fontSize: 26, fontWeight: 800, color: 'var(--text1)', textAlign: 'center', marginBottom: 8, lineHeight: 1.2 }}>
-          Welcome
+          {t('loginTitle')}
         </h1>
 
-        {/* Subtitle */}
         <p style={{ fontSize: 13.5, color: 'var(--text3)', textAlign: 'center', marginBottom: 32, lineHeight: 1.6 }}>
-          Begin your personalized AI learning journey
+          {t('loginSubtitle')}
         </p>
 
-        {/* Social buttons */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 24 }}>
           {SOCIAL_BTNS.map(btn => (
             <SocialButton key={btn.label} {...btn} onClick={go} />
           ))}
         </div>
 
-        {/* Divider */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
           <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
           <span style={{ fontSize: 12, color: 'var(--text4)', fontWeight: 500, letterSpacing: '0.04em' }}>or</span>
           <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
         </div>
 
-        {/* Continue as Guest */}
         <button
           onClick={go}
           onMouseEnter={e => { e.currentTarget.style.background = 'var(--surface2)'; e.currentTarget.style.color = 'var(--text1)' }}
@@ -105,7 +101,7 @@ export default function Login() {
             transition: 'background 0.12s, color 0.12s',
           }}
         >
-          Continue as Guest
+          {t('continueAsGuest')}
         </button>
       </motion.div>
     </div>

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import PageTransition from '../components/PageTransition.jsx'
 import { COURSE_CATALOG } from '../data/mockData.js'
+import { useLanguage } from '../context/LanguageContext.jsx'
 
 const DESCRIPTIONS = {
   python:  'Learn Python from scratch with hands-on exercises and AI-guided feedback.',
@@ -15,6 +16,7 @@ const DESCRIPTIONS = {
 
 export default function Courses() {
   const navigate = useNavigate()
+  const { t } = useLanguage()
   const [selected, setSelected] = useState(null)
 
   return (
@@ -24,16 +26,16 @@ export default function Courses() {
 
           {/* Back */}
           <button className="btn btn-ghost btn-sm" style={{ marginBottom: 32 }} onClick={() => navigate('/')}>
-            ← Back
+            {t('back')}
           </button>
 
           {/* Header */}
           <div style={{ textAlign: 'center', marginBottom: 40 }}>
             <h1 style={{ fontSize: 28, fontWeight: 800, color: 'var(--text1)', marginBottom: 10, lineHeight: 1.25 }}>
-              Choose Your Learning Path
+              {t('chooseYourPath')}
             </h1>
             <p style={{ fontSize: 14.5, color: 'var(--text3)', lineHeight: 1.65, maxWidth: 480, margin: '0 auto' }}>
-              Select a course to begin your personalized AI learning journey.
+              {t('selectCourseSubtitle')}
             </p>
           </div>
 
@@ -95,7 +97,7 @@ export default function Courses() {
                 transition: 'opacity 0.15s',
               }}
             >
-              Continue →
+              {t('continue')}
             </button>
           </div>
 

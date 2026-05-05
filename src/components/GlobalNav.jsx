@@ -1,18 +1,20 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import ThemeToggle from './ThemeToggle'
-
-const NAV_LINKS = [
-  { path: '/',          label: 'Home',      icon: '🏠' },
-  { path: '/dashboard', label: 'Dashboard', icon: '📖' },
-  { path: '/courses',   label: 'Courses',   icon: '🗂️' },
-  { path: '/tutor',     label: 'AI Tutor',  icon: '✨' },
-  { path: '/sandbox',   label: 'Sandbox',   icon: '💻' },
-  { path: '/settings',  label: 'Settings',  icon: '⚙️' },
-]
+import { useLanguage } from '../context/LanguageContext.jsx'
 
 export default function GlobalNav() {
   const navigate = useNavigate()
   const { pathname } = useLocation()
+  const { t } = useLanguage()
+
+  const NAV_LINKS = [
+    { path: '/',          label: t('home'),      icon: '🏠' },
+    { path: '/dashboard', label: t('dashboard'), icon: '📖' },
+    { path: '/courses',   label: t('courses'),   icon: '🗂️' },
+    { path: '/tutor',     label: t('aiTutor'),   icon: '✨' },
+    { path: '/sandbox',   label: t('sandbox'),   icon: '💻' },
+    { path: '/settings',  label: t('settings'),  icon: '⚙️' },
+  ]
 
   return (
     <header style={{

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { useLanguage } from '../context/LanguageContext.jsx'
 
 const LEVELS = ['Beginner', 'Intermediate', 'Advanced']
 
@@ -56,6 +57,7 @@ function OptionButton({ label, selected, onClick }) {
 export default function Questionnaire() {
   const navigate = useNavigate()
   const location = useLocation()
+  const { t } = useLanguage()
   const courseId = location.state?.courseId ?? null
 
   const [currentLevel, setCurrentLevel] = useState('')
@@ -89,7 +91,7 @@ export default function Questionnaire() {
           className="btn btn-ghost btn-sm"
           onClick={() => navigate('/courses')}
         >
-          ← Back
+          {t('back')}
         </button>
       </motion.div>
 
@@ -113,7 +115,7 @@ export default function Questionnaire() {
             lineHeight: 1.25,
             letterSpacing: '-0.3px',
           }}>
-            Tell Us About Yourself
+            {t('tellUsAboutYou')}
           </h1>
           <p style={{
             fontSize: 14.5,
@@ -122,7 +124,7 @@ export default function Questionnaire() {
             maxWidth: 440,
             margin: '0 auto',
           }}>
-            Help us customize your learning experience in programming
+            {t('customizeExperience')}
           </p>
         </motion.div>
 
@@ -143,7 +145,7 @@ export default function Questionnaire() {
           {/* Section 1: Level */}
           <div>
             <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text1)', marginBottom: 12 }}>
-              What is your current level?
+              {t('currentLevel')}
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
               {LEVELS.map(lvl => (
@@ -160,7 +162,7 @@ export default function Questionnaire() {
           {/* Section 2: Goals */}
           <div>
             <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text1)', marginBottom: 12 }}>
-              What are your learning goals?
+              {t('learningGoalsQ')}
             </div>
             <textarea
               value={learningGoals}
@@ -189,7 +191,7 @@ export default function Questionnaire() {
           {/* Section 3: Weekly time */}
           <div>
             <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text1)', marginBottom: 12 }}>
-              How much time can you commit weekly?
+              {t('weeklyCommitment')}
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10 }}>
               {TIME_OPTIONS.map(opt => (
@@ -213,7 +215,7 @@ export default function Questionnaire() {
             disabled={!canContinue}
             style={{ width: '100%', fontWeight: 700, justifyContent: 'center' }}
           >
-            Continue →
+            {t('continue')}
           </button>
         </motion.div>
       </div>

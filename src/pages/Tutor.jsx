@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import PageTransition from '../components/PageTransition.jsx'
 import { AI_WELCOME, AI_REPLIES } from '../data/mockData.js'
+import { useLanguage } from '../context/LanguageContext.jsx'
 
 const SUGGESTED_TOPICS = [
   { icon: '🔁', label: '什麼是遞迴？' },
@@ -21,6 +22,7 @@ const HISTORY = [
 const INITIAL_MESSAGES = [{ role: 'ai', text: AI_WELCOME }]
 
 export default function Tutor() {
+  const { t } = useLanguage()
   const [messages, setMessages] = useState(INITIAL_MESSAGES)
   const [input, setInput]       = useState('')
   const [thinking, setThinking] = useState(false)
@@ -68,13 +70,13 @@ export default function Tutor() {
               style={{ width: '100%' }}
               onClick={() => setMessages(INITIAL_MESSAGES)}
             >
-              ✦ 新對話
+              {t('newChat')}
             </button>
           </div>
 
           <div style={{ padding: '10px 14px 6px' }}>
             <p style={{ fontSize: 10.5, fontWeight: 700, color: 'var(--text4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>
-              學習建議
+              {t('suggestedTopics')}
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               {SUGGESTED_TOPICS.map(t => (
@@ -100,7 +102,7 @@ export default function Tutor() {
 
           <div style={{ padding: '14px 14px 6px', borderTop: '1px solid var(--border)', marginTop: 8 }}>
             <p style={{ fontSize: 10.5, fontWeight: 700, color: 'var(--text4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>
-              歷史對話
+              {t('chatHistory')}
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               {HISTORY.map(h => (
@@ -143,11 +145,11 @@ export default function Tutor() {
             <span style={{ fontSize: 18 }}>✨</span>
             <div>
               <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text1)', lineHeight: 1.2 }}>AI Tutor</div>
-              <div style={{ fontSize: 11, color: 'var(--text3)', marginTop: 1 }}>Powered by EduPlatform AI</div>
+              <div style={{ fontSize: 11, color: 'var(--text3)', marginTop: 1 }}>{t('poweredBy')}</div>
             </div>
             <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 6 }}>
               <div style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--success)' }} />
-              <span style={{ fontSize: 11, color: 'var(--text3)' }}>Online</span>
+              <span style={{ fontSize: 11, color: 'var(--text3)' }}>{t('online')}</span>
             </div>
           </div>
 
@@ -210,7 +212,7 @@ export default function Tutor() {
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && !e.shiftKey && send()}
-              placeholder="問你的 AI Tutor 任何問題..."
+              placeholder={t('askQuestion')}
               style={{
                 flex: 1, padding: '10px 14px',
                 background: 'var(--surface2)', border: '1px solid var(--border2)',

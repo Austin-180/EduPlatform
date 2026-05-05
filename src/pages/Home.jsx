@@ -1,9 +1,11 @@
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import PageTransition from '../components/PageTransition.jsx'
+import { useLanguage } from '../context/LanguageContext.jsx'
 
 export default function Home() {
   const navigate = useNavigate()
+  const { t } = useLanguage()
 
   return (
     <PageTransition>
@@ -42,7 +44,7 @@ export default function Home() {
             lineHeight: 1.25,
             marginBottom: 14,
           }}>
-            Welcome to AI Learning Platform
+            {t('homeTitle')}
           </h1>
 
           {/* Subtitle */}
@@ -53,7 +55,7 @@ export default function Home() {
             marginBottom: 36,
             maxWidth: 400,
           }}>
-            Your personalized AI-powered learning experience. Master programming with an intelligent tutor, interactive exercises, and a built-in code sandbox.
+            {t('homeSubtitle')}
           </p>
 
           {/* CTA */}
@@ -62,7 +64,7 @@ export default function Home() {
             style={{ width: '65%', fontWeight: 700, justifyContent: 'center' }}
             onClick={() => navigate('/courses')}
           >
-            Get Started
+            {t('getStarted')}
           </button>
         </motion.div>
       </div>

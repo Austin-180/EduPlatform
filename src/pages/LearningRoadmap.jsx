@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { useLanguage } from '../context/LanguageContext.jsx'
 
 const LEVEL_META = {
   Beginner:     { difficulty: 'Foundational' },
@@ -51,6 +52,7 @@ function SummaryCard({ icon, value, label }) {
 }
 
 function RoadmapWeek({ week, title, hours, tags, isLast }) {
+  const { t } = useLanguage()
   return (
     <div style={{ display: 'flex', gap: 16 }}>
       {/* Timeline */}
@@ -96,7 +98,7 @@ function RoadmapWeek({ week, title, hours, tags, isLast }) {
             borderRadius: 999,
             flexShrink: 0,
           }}>
-            upcoming
+            {t('upcoming')}
           </span>
         </div>
         <div style={{ fontSize: 12.5, color: 'var(--text3)', marginBottom: 12 }}>{hours}</div>
@@ -127,6 +129,7 @@ const fadeUp = (delay = 0) => ({
 
 export default function LearningRoadmap() {
   const navigate = useNavigate()
+  const { t } = useLanguage()
   const data     = readOnboarding()
 
   const diff   = (LEVEL_META[data.currentLevel] ?? LEVEL_META.Beginner).difficulty
@@ -149,13 +152,13 @@ export default function LearningRoadmap() {
           marginBottom: 10, lineHeight: 1.25,
           letterSpacing: '-0.3px',
         }}>
-          Your Learning Roadmap
+          {t('yourRoadmap')}
         </h1>
         <p style={{
           fontSize: 14.5, color: 'var(--text3)',
           lineHeight: 1.65, maxWidth: 500, margin: '0 auto',
         }}>
-          A customized 4-week roadmap designed for your programming learning journey
+          {t('customized4Week')}
         </p>
       </motion.div>
 
@@ -170,9 +173,9 @@ export default function LearningRoadmap() {
           marginBottom: 24,
         }}
       >
-        <SummaryCard icon="◎" value={diff}    label="Difficulty Level" />
-        <SummaryCard icon="⏱" value={weekly}  label="Study Time"       />
-        <SummaryCard icon="↗" value="4 Weeks" label="Duration"         />
+        <SummaryCard icon="◎" value={diff}    label={t('difficultyLevel')} />
+        <SummaryCard icon="⏱" value={weekly}  label={t('studyTime')}       />
+        <SummaryCard icon="↗" value="4 Weeks" label={t('duration')}         />
       </motion.div>
 
       {/* Roadmap card */}
@@ -187,7 +190,7 @@ export default function LearningRoadmap() {
         }}
       >
         <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--text1)', marginBottom: 24 }}>
-          Learning Roadmap
+          {t('learningRoadmapCard')}
         </div>
         {ROADMAP_WEEKS.map((w, i) => (
           <RoadmapWeek
@@ -205,7 +208,7 @@ export default function LearningRoadmap() {
           onClick={() => navigate('/dashboard')}
           style={{ width: 240, fontWeight: 700, justifyContent: 'center' }}
         >
-          Start Learning →
+          {t('startLearning')}
         </button>
       </motion.div>
     </div>

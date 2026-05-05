@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import CourseOutline from '../components/CourseOutline.jsx'
 import ThemeToggle from '../components/ThemeToggle.jsx'
 import { CHAPTERS, AI_REPLIES } from '../data/mockData.js'
+import { useLanguage } from '../context/LanguageContext.jsx'
 
 const ALL_LESSONS = CHAPTERS.flatMap(ch => ch.lessons)
 
@@ -354,8 +355,8 @@ function SettingsSection({ title, children }) {
 }
 
 function SettingsPanel() {
-  const [language, setLanguage] = useState('English')
-  const [speed, setSpeed] = useState('Standard')
+  const { language, setLanguage, t } = useLanguage()
+  const [speed, setSpeed] = useState('standard')
   const [notifications, setNotifications] = useState(true)
 
   const selectStyle = {
@@ -365,43 +366,42 @@ function SettingsPanel() {
 
   return (
     <div style={{ flex: 1, overflowY: 'auto', padding: '24px 28px' }}>
-      <Label>Settings</Label>
+      <Label>{t('settingsTool')}</Label>
       <div style={{ marginTop: 20 }}>
-        <SettingsSection title="Account">
-          <SettingsRow label="Name" value="Austin" />
-          <SettingsRow label="Email" value="austinting1288@gmail.com" />
+        <SettingsSection title={t('dashboardAccountSection')}>
+          <SettingsRow label={t('accountName')} value="Austin" />
+          <SettingsRow label={t('accountEmail')} value="austinting1288@gmail.com" />
           <div style={{ padding: '12px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: 13.5, color: 'var(--text2)' }}>Plan</span>
+            <span style={{ fontSize: 13.5, color: 'var(--text2)' }}>{t('accountPlan')}</span>
             <span style={{ fontSize: 12, fontWeight: 600, background: 'var(--accent)', color: 'var(--accent-text)', padding: '2px 10px', borderRadius: 12 }}>Student — Free</span>
           </div>
         </SettingsSection>
 
-        <SettingsSection title="Appearance">
+        <SettingsSection title={t('dashboardAppearanceSection')}>
           <div style={{ padding: '12px 0', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: 13.5, color: 'var(--text2)' }}>Dark Mode</span>
-            <span style={{ fontSize: 12.5, color: 'var(--text3)', fontStyle: 'italic' }}>Use the toggle in the top-right header</span>
+            <span style={{ fontSize: 13.5, color: 'var(--text2)' }}>{t('darkMode')}</span>
+            <span style={{ fontSize: 12.5, color: 'var(--text3)', fontStyle: 'italic' }}>{t('dashboardDarkModeHint')}</span>
           </div>
           <div style={{ padding: '12px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: 13.5, color: 'var(--text2)' }}>Interface Language</span>
+            <span style={{ fontSize: 13.5, color: 'var(--text2)' }}>{t('interfaceLanguage')}</span>
             <select value={language} onChange={e => setLanguage(e.target.value)} style={selectStyle}>
-              <option>English</option>
-              <option>繁體中文</option>
-              <option>日本語</option>
+              <option value="zh-TW">繁體中文</option>
+              <option value="en">English</option>
             </select>
           </div>
         </SettingsSection>
 
-        <SettingsSection title="Learning Preferences">
+        <SettingsSection title={t('dashboardLearningSection')}>
           <div style={{ padding: '12px 0', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: 13.5, color: 'var(--text2)' }}>Learning Speed</span>
+            <span style={{ fontSize: 13.5, color: 'var(--text2)' }}>{t('learningSpeedLabel')}</span>
             <select value={speed} onChange={e => setSpeed(e.target.value)} style={selectStyle}>
-              <option>Relaxed</option>
-              <option>Standard</option>
-              <option>Intensive</option>
+              <option value="relaxed">{t('learningSpeedRelaxed')}</option>
+              <option value="standard">{t('learningSpeedStandard')}</option>
+              <option value="intensive">{t('learningSpeedIntensive')}</option>
             </select>
           </div>
           <div style={{ padding: '12px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: 13.5, color: 'var(--text2)' }}>Email Notifications</span>
+            <span style={{ fontSize: 13.5, color: 'var(--text2)' }}>{t('emailNotifLabel')}</span>
             <button
               onClick={() => setNotifications(n => !n)}
               style={{
@@ -546,21 +546,22 @@ function FloatingAiChat({ open, onToggle }) {
 
 // ─── Dashboard ────────────────────────────────────────────────────────────────
 
-const LEFT_TOOLS = [
-  { id: 'summary', label: 'Summary' },
-  { id: 'concepts', label: 'Concepts' },
-  { id: 'mind-map', label: 'Mind Map' },
-]
-
-const RIGHT_TOOLS = [
-  { id: 'ai-tutor', label: 'AI Tutor' },
-  { id: 'sandbox', label: 'Sandbox' },
-]
-
 export default function Dashboard() {
+  const { t } = useLanguage()
   const [activeLesson, setActiveLesson] = useState('l1')
   const [activeTool, setActiveTool] = useState('lesson')
   const [aiOpen, setAiOpen] = useState(false)
+
+  const LEFT_TOOLS = [
+    { id: 'summary',  label: t('summary')  },
+    { id: 'concepts', label: t('concepts') },
+    { id: 'mind-map', label: t('mindMap')  },
+  ]
+
+  const RIGHT_TOOLS = [
+    { id: 'ai-tutor', label: t('aiTutorTool') },
+    { id: 'sandbox',  label: t('sandboxTool') },
+  ]
 
   const currentIdx = ALL_LESSONS.findIndex(l => l.id === activeLesson)
   const hasNext = currentIdx < ALL_LESSONS.length - 1
@@ -603,7 +604,7 @@ export default function Dashboard() {
               color: activeTool === 'settings' ? 'var(--accent-text)' : 'var(--text2)',
               transition: 'all 0.15s',
             }}
-          >Settings</button>
+          >{t('settingsTool')}</button>
           <ThemeToggle />
         </div>
       </header>
@@ -663,7 +664,7 @@ export default function Dashboard() {
               opacity: hasNext ? 1 : 0.45, transition: 'all 0.15s',
             }}
           >
-            {hasNext ? 'Skip Chapter →' : 'Last Chapter'}
+            {hasNext ? t('skipChapter') : t('lastChapter')}
           </button>
         </div>
       </div>

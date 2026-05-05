@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { useLanguage } from '../context/LanguageContext.jsx'
 
 const LEARN_ITEMS = [
   'Core concepts and fundamentals',
@@ -91,6 +92,7 @@ const fadeUp = (delay = 0) => ({
 
 export default function LearningPathConfirm() {
   const navigate = useNavigate()
+  const { t } = useLanguage()
   const data     = readOnboarding()
 
   const meta   = LEVEL_META[data.currentLevel] ?? LEVEL_META.Beginner
@@ -139,13 +141,13 @@ export default function LearningPathConfirm() {
           marginBottom: 10, lineHeight: 1.25,
           letterSpacing: '-0.3px',
         }}>
-          Your Personalized Learning Path
+          {t('yourPersonalizedPath')}
         </h1>
         <p style={{
           fontSize: 14.5, color: 'var(--text3)',
           lineHeight: 1.65, maxWidth: 480, margin: '0 auto',
         }}>
-          Based on your responses, we've crafted a custom curriculum for you
+          {t('basedOnResponses')}
         </p>
       </motion.div>
 
@@ -162,22 +164,22 @@ export default function LearningPathConfirm() {
         }}
       >
         <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--text1)' }}>
-          Recommended Track: {track}
+          {t('recommendedTrack')} {track}
         </div>
 
         <Divider />
 
         <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-          <InfoBlock icon="◎" label="Difficulty Level"   value={diff}   />
-          <InfoBlock icon="⏱" label="Estimated Duration" value={dur}    />
-          <InfoBlock icon="↗" label="Weekly Commitment"  value={weekly} />
+          <InfoBlock icon="◎" label={t('difficultyLevel')}    value={diff}   />
+          <InfoBlock icon="⏱" label={t('estimatedDuration')} value={dur}    />
+          <InfoBlock icon="↗" label={t('weeklyCommitmentLabel')} value={weekly} />
         </div>
 
         <Divider />
 
         <div>
           <div style={{ fontSize: 14.5, fontWeight: 700, color: 'var(--text1)', marginBottom: 12 }}>
-            Your Goals
+            {t('yourGoals')}
           </div>
           <div style={{
             background: 'var(--surface2)',
@@ -193,7 +195,7 @@ export default function LearningPathConfirm() {
 
         <div>
           <div style={{ fontSize: 14.5, fontWeight: 700, color: 'var(--text1)', marginBottom: 14 }}>
-            What You'll Learn
+            {t('whatYouLearn')}
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             {LEARN_ITEMS.map((item, i) => (
@@ -225,9 +227,9 @@ export default function LearningPathConfirm() {
           marginBottom: 36,
         }}
       >
-        <SummaryCard icon="◎" value={diff}    label="Difficulty Level" />
-        <SummaryCard icon="⏱" value={weekly}  label="Study Time"       />
-        <SummaryCard icon="↗" value="4 Weeks" label="Duration"         />
+        <SummaryCard icon="◎" value={diff}    label={t('difficultyLevel')} />
+        <SummaryCard icon="⏱" value={weekly}  label={t('studyTime')}       />
+        <SummaryCard icon="↗" value="4 Weeks" label={t('duration')}         />
       </motion.div>
 
       {/* View Study Plan → goes to roadmap */}
@@ -237,7 +239,7 @@ export default function LearningPathConfirm() {
           onClick={() => navigate('/learning-roadmap')}
           style={{ width: 240, fontWeight: 700, justifyContent: 'center' }}
         >
-          View Study Plan
+          {t('viewStudyPlan')}
         </button>
       </motion.div>
     </div>

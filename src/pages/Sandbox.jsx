@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import PageTransition from '../components/PageTransition.jsx'
+import { useLanguage } from '../context/LanguageContext.jsx'
 
 const TASKS = [
   {
@@ -46,6 +47,7 @@ const LEVEL_COLOR = {
 }
 
 export default function Sandbox() {
+  const { t } = useLanguage()
   const [activeId, setActiveId] = useState('t1')
   const [codes, setCodes]       = useState(Object.fromEntries(TASKS.map(t => [t.id, t.starterCode])))
   const [output, setOutput]     = useState('')
@@ -80,7 +82,7 @@ export default function Sandbox() {
         >
           <div style={{ padding: '13px 16px', borderBottom: '1px solid var(--border)', flexShrink: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
             <span style={{ fontSize: 14, color: 'var(--primary)', fontFamily: 'monospace', fontWeight: 800 }}>{'<>'}</span>
-            <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text1)' }}>練習題目</span>
+            <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text1)' }}>{t('exercises')}</span>
             <span style={{ marginLeft: 'auto', fontSize: 11, color: 'var(--text4)', background: 'var(--surface2)', padding: '2px 8px', borderRadius: 999, border: '1px solid var(--border)' }}>Python</span>
           </div>
 
@@ -179,13 +181,13 @@ export default function Sandbox() {
           }}
         >
           <div style={{ padding: '13px 16px', borderBottom: '1px solid var(--border)', flexShrink: 0 }}>
-            <span style={{ fontSize: 13.5, fontWeight: 700, color: 'var(--text1)' }}>Output</span>
+            <span style={{ fontSize: 13.5, fontWeight: 700, color: 'var(--text1)' }}>{t('outputLabel')}</span>
           </div>
 
           <div style={{ flex: 1, padding: '16px', overflow: 'auto', background: 'var(--code-bg)' }}>
             {output
               ? <pre style={{ fontSize: 13, color: output.includes('exit code 0') ? 'var(--success)' : 'var(--code-text)', fontFamily: "'SF Mono','Fira Code',Consolas,monospace", whiteSpace: 'pre-wrap', margin: 0, lineHeight: 1.7 }}>{output}</pre>
-              : <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.2)', fontFamily: 'monospace', lineHeight: 1.6 }}>Click Run Code to execute...</p>
+              : <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.2)', fontFamily: 'monospace', lineHeight: 1.6 }}>{t('clickToRun')}</p>
             }
           </div>
 
@@ -204,7 +206,7 @@ export default function Sandbox() {
                 boxShadow: running ? 'none' : '0 2px 12px rgba(245,200,66,.25)',
               }}
             >
-              {running ? '⏳ Running...' : '▶ Run Code'}
+              {running ? t('runningCode') : t('runCode')}
             </button>
           </div>
         </motion.aside>
