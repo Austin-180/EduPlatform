@@ -56,12 +56,12 @@ export const PLAN_WEEKS = [
 ]
 
 export const COURSE_CATALOG = [
-  { id: 'python', title: 'Python Fundamentals',       icon: '🐍', level: 'Beginner',     lessons: 12, duration: '4h 30m', progress: 33 },
-  { id: 'js',     title: 'JavaScript Essentials',     icon: '⚡', level: 'Beginner',     lessons: 15, duration: '5h 15m', progress: 0  },
-  { id: 'dsa',    title: 'Data Structures & Algos',   icon: '🗂️', level: 'Intermediate', lessons: 20, duration: '8h 00m', progress: 0  },
-  { id: 'react',  title: 'React in Practice',         icon: '⚛️', level: 'Intermediate', lessons: 18, duration: '6h 45m', progress: 0  },
-  { id: 'ml',     title: 'Intro to Machine Learning', icon: '🤖', level: 'Advanced',     lessons: 24, duration: '10h',    progress: 0  },
-  { id: 'system', title: 'System Design Basics',      icon: '🏗️', level: 'Advanced',     lessons: 16, duration: '7h 20m', progress: 0  },
+  { id: 'fundamentals', title: 'Cybersecurity Fundamentals', icon: '🛡️', level: 'Beginner',     lessons: 12, duration: '4h 30m', progress: 20 },
+  { id: 'network',      title: 'Network Security',           icon: '🌐', level: 'Beginner',     lessons: 15, duration: '5h 15m', progress: 0  },
+  { id: 'web',          title: 'Web Application Security',    icon: '🕸️', level: 'Intermediate', lessons: 18, duration: '6h 45m', progress: 0  },
+  { id: 'redblue',      title: 'Red vs Blue Team',           icon: '🎯', level: 'Advanced',     lessons: 20, duration: '8h 00m', progress: 0  },
+  { id: 'crypto',       title: 'Cryptography Essentials',    icon: '🔐', level: 'Intermediate', lessons: 16, duration: '6h 00m', progress: 0  },
+  { id: 'social',       title: 'Social Engineering',         icon: '🎭', level: 'Beginner',     lessons: 10, duration: '3h 30m', progress: 0  },
 ]
 
 export const AI_WELCOME = "Welcome to programming! I'm your AI tutor. I'm here to help you understand concepts, answer questions, and guide you through practice exercises. What would you like to explore today?"

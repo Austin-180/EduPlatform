@@ -6,12 +6,12 @@ import { COURSE_CATALOG } from '../data/mockData.js'
 import { useLanguage } from '../context/LanguageContext.jsx'
 
 const DESCRIPTIONS = {
-  python:  'Learn Python from scratch with hands-on exercises and AI-guided feedback.',
-  js:      'Build dynamic web experiences with modern JavaScript fundamentals.',
-  dsa:     'Master algorithms and data structures for technical interviews.',
-  react:   'Build modern web apps with React hooks, components, and state.',
-  ml:      'Explore machine learning concepts with practical Python examples.',
-  system:  'Learn scalable system design patterns used at top tech companies.',
+  fundamentals: 'Build a security mindset from scratch — the CIA triad, threats, and core defense concepts.',
+  network:      'Understand protocols, traffic analysis, firewalls, and common network-layer attacks.',
+  web:          'Exploit and defend web apps — XSS, SQL injection, CSRF, and the OWASP Top 10.',
+  redblue:      'Offense meets defense — red-team attack techniques versus blue-team detection.',
+  crypto:       'Learn encryption, hashing, and digital signatures — how cryptography protects data.',
+  social:       'Recognize phishing, pretexting, and human-layer attacks — and how to defend against them.',
 }
 
 export default function Courses() {
