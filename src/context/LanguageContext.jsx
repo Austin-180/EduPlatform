@@ -28,8 +28,8 @@ const TRANSLATIONS = {
     settingsTool: '設定',
 
     // Home
-    homeTitle: '歡迎使用 AI 學習平台',
-    homeSubtitle: '你的個人化 AI 學習體驗。透過智能導師、互動練習和程式沙盒掌握程式設計。',
+    homeTitle: '歡迎使用 AI 資安學習平台',
+    homeSubtitle: '你的個人化 AI 學習體驗。透過智能導師、互動練習和實作沙盒掌握資訊安全。',
     getStarted: '立即開始',
 
     // Login
@@ -46,7 +46,7 @@ const TRANSLATIONS = {
 
     // Questionnaire
     tellUsAboutYou: '告訴我們關於你的事',
-    customizeExperience: '幫助我們個人化你的程式學習體驗',
+    customizeExperience: '幫助我們個人化你的資安學習體驗',
     currentLevel: '你目前的程度是？',
     learningGoalsQ: '你的學習目標是什麼？',
     weeklyCommitment: '你每週能投入多少時間？',
@@ -66,7 +66,7 @@ const TRANSLATIONS = {
 
     // LearningRoadmap
     yourRoadmap: '你的學習路線圖',
-    customized4Week: '為你的程式學習旅程設計的 4 週路線圖',
+    customized4Week: '為你的資安學習旅程設計的 4 週路線圖',
     learningRoadmapCard: '學習路線圖',
     startLearning: '開始學習 →',
     upcoming: '即將到來',
@@ -161,8 +161,8 @@ const TRANSLATIONS = {
     settingsTool: 'Settings',
 
     // Home
-    homeTitle: 'Welcome to AI Learning Platform',
-    homeSubtitle: 'Your personalized AI-powered learning experience. Master programming with an intelligent tutor, interactive exercises, and a built-in code sandbox.',
+    homeTitle: 'Welcome to the AI Cybersecurity Platform',
+    homeSubtitle: 'Your personalized AI-powered learning experience. Master cybersecurity with an intelligent tutor, hands-on labs, and a built-in practice sandbox.',
     getStarted: 'Get Started',
 
     // Login
@@ -179,7 +179,7 @@ const TRANSLATIONS = {
 
     // Questionnaire
     tellUsAboutYou: 'Tell Us About Yourself',
-    customizeExperience: 'Help us customize your learning experience in programming',
+    customizeExperience: 'Help us customize your cybersecurity learning experience',
     currentLevel: 'What is your current level?',
     learningGoalsQ: 'What are your learning goals?',
     weeklyCommitment: 'How much time can you commit weekly?',
@@ -199,7 +199,7 @@ const TRANSLATIONS = {
 
     // LearningRoadmap
     yourRoadmap: 'Your Learning Roadmap',
-    customized4Week: 'A customized 4-week roadmap designed for your programming learning journey',
+    customized4Week: 'A customized 4-week roadmap designed for your cybersecurity learning journey',
     learningRoadmapCard: 'Learning Roadmap',
     startLearning: 'Start Learning →',
     upcoming: 'upcoming',
