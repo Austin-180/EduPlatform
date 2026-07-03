@@ -64,12 +64,12 @@ export const COURSE_CATALOG = [
   { id: 'social',       title: 'Social Engineering',         icon: '🎭', level: 'Beginner',     lessons: 10, duration: '3h 30m', progress: 0  },
 ]
 
-export const AI_WELCOME = "Welcome to programming! I'm your AI tutor. I'm here to help you understand concepts, answer questions, and guide you through practice exercises. What would you like to explore today?"
+export const AI_WELCOME = "Welcome to cybersecurity! I'm your AI tutor. I'm here to help you understand concepts, answer questions, and guide you through hands-on labs. What would you like to explore today?"
 
 export const AI_REPLIES = [
-  "Great question! A function is a reusable block of code that performs a specific task. Think of it like a recipe — define it once, call it many times. This keeps code DRY and easy to debug.",
-  "Recursion is when a function calls itself. The key is always having a base case — a stopping condition. Without it you'd get infinite recursion and a stack overflow. Classic: `factorial(n) = n × factorial(n-1)`.",
-  "Variables are named containers for values. In Python, types are inferred: `x = 5` creates an integer, `name = 'Alice'` creates a string. No explicit declaration needed!",
-  "For loops, think about three things: (1) starting value, (2) stopping condition, (3) how it changes each step. Getting any wrong leads to infinite loops. Try: `for i in range(10): print(i)`",
-  "OOP organizes code into objects combining data (attributes) and behavior (methods). The four pillars: Encapsulation, Abstraction, Inheritance, and Polymorphism.",
+  "Great question! The CIA triad — Confidentiality, Integrity, Availability — is the foundation of security. Confidentiality keeps data secret, Integrity keeps it accurate and untampered, and Availability keeps it accessible when needed.",
+  "XSS (Cross-Site Scripting) is when an attacker injects malicious scripts into a page other users view. The fix: validate input and escape/encode output. Never render untrusted user data as raw HTML.",
+  "SQL injection happens when untrusted input is concatenated into a query. The defense is parameterized queries (prepared statements) — they separate code from data, so input can't change the query's logic.",
+  "Hashing is a one-way function — you can't reverse it. Passwords should be stored as salted hashes (e.g., bcrypt), never in plain text, so a database leak doesn't directly expose them.",
+  "Defense in depth means layering controls — firewall, patching, least privilege, monitoring — so if one layer fails, others still protect you. No single control should be your only line of defense.",
 ]

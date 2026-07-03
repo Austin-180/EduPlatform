@@ -238,7 +238,7 @@ function MindMapPanel({ lessonId }) {
 
 function AiTutorPanel() {
   const [messages, setMessages] = useState([
-    { role: 'ai', text: "Hi! I'm your AI tutor. Ask me anything about this lesson or programming in general." },
+    { role: 'ai', text: "Hi! I'm your AI tutor. Ask me anything about this lesson or cybersecurity in general." },
   ])
   const [input, setInput] = useState('')
   const bottomRef = useRef(null)
@@ -299,7 +299,7 @@ function SandboxPanel({ lessonId }) {
   const [output, setOutput] = useState('')
 
   function run() {
-    setOutput('> Running program...\n> Hello, World!\n>\n> ✓ Execution complete (0.0s)')
+    setOutput('> Running security check...\n> No issues found.\n>\n> ✓ Scan complete (0.0s)')
   }
 
   return (
@@ -430,7 +430,7 @@ function RightSandboxPanel() {
   const [output, setOutput] = useState('')
 
   function runCode() {
-    setOutput('> Running...\n> Hello, World!\n>\n> ✓ No errors found.')
+    setOutput('> Running...\n> Scan complete.\n>\n> ✓ No issues found.')
   }
 
   return (

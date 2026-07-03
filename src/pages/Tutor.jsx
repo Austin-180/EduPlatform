@@ -5,18 +5,18 @@ import { AI_WELCOME, AI_REPLIES } from '../data/mockData.js'
 import { useLanguage } from '../context/LanguageContext.jsx'
 
 const SUGGESTED_TOPICS = [
-  { icon: '🔁', label: '什麼是遞迴？' },
-  { icon: '📦', label: '解釋物件導向' },
-  { icon: '🔀', label: 'for 迴圈怎麼用？' },
-  { icon: '⚡', label: 'Python vs JavaScript' },
-  { icon: '🧪', label: '如何寫測試？' },
-  { icon: '🗂️', label: '常見資料結構有哪些？' },
+  { icon: '🔐', label: '什麼是 CIA 三要素？' },
+  { icon: '🕸️', label: '解釋 XSS 攻擊' },
+  { icon: '💉', label: 'SQL Injection 怎麼防？' },
+  { icon: '🔑', label: '密碼該如何安全儲存？' },
+  { icon: '🛡️', label: '什麼是縱深防禦？' },
+  { icon: '🎣', label: '如何辨識釣魚郵件？' },
 ]
 
 const HISTORY = [
-  { id: 'h1', title: '遞迴與函式基礎', time: '昨天' },
-  { id: 'h2', title: 'Python 變數型別',  time: '2 天前' },
-  { id: 'h3', title: '迴圈與條件判斷',  time: '3 天前' },
+  { id: 'h1', title: 'CIA 三要素與風險', time: '昨天' },
+  { id: 'h2', title: 'OWASP Top 10 概覽', time: '2 天前' },
+  { id: 'h3', title: '密碼雜湊與加鹽',   time: '3 天前' },
 ]
 
 const INITIAL_MESSAGES = [{ role: 'ai', text: AI_WELCOME }]
