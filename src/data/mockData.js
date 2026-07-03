@@ -1,57 +1,57 @@
 export const CHAPTERS = [
   {
-    id: 'c1', title: 'Foundation & Core Concepts', icon: '📌',
+    id: 'c1', title: 'Security Foundations', icon: '🛡️',
     lessons: [
-      { id: 'l1', title: 'Introduction to Core Concepts', time: '12 min', status: 'active' },
-      { id: 'l2', title: 'Setting Up Your Environment',   time: '15 min', status: 'done' },
-      { id: 'l3', title: 'Understanding the Basics',      time: '18 min', status: 'pending' },
-      { id: 'l4', title: 'First Practical Exercise',      time: '20 min', status: 'pending' },
-      { id: 'l5', title: 'Variables and Data Types',      time: '16 min', status: 'pending' },
-      { id: 'l6', title: 'Control Flow and Logic',        time: '22 min', status: 'pending' },
+      { id: 'l1', title: 'Introduction to Cybersecurity', time: '12 min', status: 'active' },
+      { id: 'l2', title: 'The CIA Triad',                 time: '15 min', status: 'done' },
+      { id: 'l3', title: 'Threats, Vulnerabilities & Risk', time: '18 min', status: 'pending' },
+      { id: 'l4', title: 'Setting Up a Security Lab',     time: '20 min', status: 'pending' },
+      { id: 'l5', title: 'Common Attack Types',           time: '16 min', status: 'pending' },
+      { id: 'l6', title: 'Defense in Depth',              time: '22 min', status: 'pending' },
     ],
   },
   {
-    id: 'c2', title: 'Practical Application', icon: '🔧',
+    id: 'c2', title: 'Networks & Web Security', icon: '🌐',
     lessons: [
-      { id: 'l7', title: 'Functions and Modules',   time: '25 min', status: 'pending' },
-      { id: 'l8', title: 'Object-Oriented Basics',  time: '30 min', status: 'pending' },
-      { id: 'l9', title: 'Error Handling Patterns', time: '20 min', status: 'pending' },
+      { id: 'l7', title: 'Network Protocols & Traffic', time: '25 min', status: 'pending' },
+      { id: 'l8', title: 'Web Vulnerabilities (OWASP)', time: '30 min', status: 'pending' },
+      { id: 'l9', title: 'Authentication & Access Control', time: '20 min', status: 'pending' },
     ],
   },
   {
-    id: 'c3', title: 'Advanced Topics', icon: '🚀',
+    id: 'c3', title: 'Offense & Defense', icon: '🎯',
     lessons: [
-      { id: 'l10', title: 'Algorithms & Data Structures', time: '35 min', status: 'pending' },
-      { id: 'l11', title: 'Testing & Debugging',          time: '28 min', status: 'pending' },
-      { id: 'l12', title: 'Final Project',                time: '60 min', status: 'pending' },
+      { id: 'l10', title: 'Penetration Testing Basics',    time: '35 min', status: 'pending' },
+      { id: 'l11', title: 'Incident Response & Forensics', time: '28 min', status: 'pending' },
+      { id: 'l12', title: 'Capstone Security Project',     time: '60 min', status: 'pending' },
     ],
   },
 ]
 
 export const ROADMAP_NODES = [
-  { id: 'r1', title: 'Foundation Concepts', desc: 'Variables, data types, basic syntax',           icon: '📌', status: 'done',   tags: ['Completed', '3 lessons'] },
-  { id: 'r2', title: 'Control Flow',        desc: 'Conditionals, loops, iteration patterns',        icon: '🔀', status: 'done',   tags: ['Completed', '4 lessons'] },
-  { id: 'r3', title: 'Functions & Modules', desc: 'Defining functions, scope, reusability',         icon: '🧩', status: 'active', tags: ['In Progress', '5 lessons'] },
-  { id: 'r4', title: 'OOP Fundamentals',    desc: 'Classes, objects, inheritance, encapsulation',   icon: '📦', status: 'locked', tags: ['Unlocks next', '6 lessons'] },
-  { id: 'r5', title: 'Data Structures',     desc: 'Lists, dicts, trees, graphs',                   icon: '🗂️', status: 'locked', tags: ['Locked', '5 lessons'] },
-  { id: 'r6', title: 'Final Capstone',      desc: 'Build a real project from scratch',             icon: '🏆', status: 'locked', tags: ['Locked', '1 project'] },
+  { id: 'r1', title: 'Security Foundations',   desc: 'CIA triad, threats, risk, security mindset',   icon: '🛡️', status: 'done',   tags: ['Completed', '3 lessons'] },
+  { id: 'r2', title: 'Network Security',       desc: 'Protocols, traffic analysis, firewalls',       icon: '🌐', status: 'done',   tags: ['Completed', '4 lessons'] },
+  { id: 'r3', title: 'Web App Security',       desc: 'OWASP Top 10, XSS, SQL injection, CSRF',        icon: '🕸️', status: 'active', tags: ['In Progress', '5 lessons'] },
+  { id: 'r4', title: 'Cryptography',           desc: 'Encryption, hashing, digital signatures, PKI',  icon: '🔐', status: 'locked', tags: ['Unlocks next', '6 lessons'] },
+  { id: 'r5', title: 'Offensive Security',     desc: 'Pentesting, exploitation, privilege escalation', icon: '🎯', status: 'locked', tags: ['Locked', '5 lessons'] },
+  { id: 'r6', title: 'Blue Team Capstone',     desc: 'Detection, incident response, hardening',       icon: '🏆', status: 'locked', tags: ['Locked', '1 project'] },
 ]
 
 export const PLAN_WEEKS = [
   { week: 1, title: 'Foundations', tasks: [
-    { label: 'Introduction to Core Concepts', time: '12 min', status: 'done' },
-    { label: 'Setting Up Environment',         time: '15 min', status: 'done' },
-    { label: 'Variables Practice',             time: '20 min', status: 'done' },
+    { label: 'Introduction to Cybersecurity', time: '12 min', status: 'done' },
+    { label: 'Setting Up a Security Lab',      time: '15 min', status: 'done' },
+    { label: 'CIA Triad Practice',             time: '20 min', status: 'done' },
   ]},
-  { week: 2, title: 'Control Flow', tasks: [
-    { label: 'If/Else Statements', time: '18 min', status: 'active' },
-    { label: 'Loops & Iteration',  time: '22 min', status: 'pending' },
+  { week: 2, title: 'Network Security', tasks: [
+    { label: 'Packet Analysis',    time: '18 min', status: 'active' },
+    { label: 'Firewall Rules',     time: '22 min', status: 'pending' },
     { label: 'Practice Exercise',  time: '25 min', status: 'pending' },
   ]},
-  { week: 3, title: 'Functions', tasks: [
-    { label: 'Defining Functions', time: '20 min', status: 'pending' },
-    { label: 'Recursion Basics',   time: '25 min', status: 'pending' },
-    { label: 'Lambda & Closures',  time: '18 min', status: 'pending' },
+  { week: 3, title: 'Web Security', tasks: [
+    { label: 'OWASP Top 10',       time: '20 min', status: 'pending' },
+    { label: 'SQL Injection Lab',  time: '25 min', status: 'pending' },
+    { label: 'XSS Practice',       time: '18 min', status: 'pending' },
   ]},
 ]
 

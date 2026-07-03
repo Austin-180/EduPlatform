@@ -9,10 +9,10 @@ const LEVEL_META = {
 }
 
 const ROADMAP_WEEKS = [
-  { week: 1, title: 'Foundation Building',  hours: '4–6 hours',  tags: ['Core Concepts', 'Environment Setup', 'First Exercises'] },
-  { week: 2, title: 'Practical Skills',     hours: '5–7 hours',  tags: ['Hands-on Projects', 'Problem Solving', 'Best Practices'] },
-  { week: 3, title: 'Advanced Techniques',  hours: '6–8 hours',  tags: ['Complex Topics', 'Optimization', 'Code Review'] },
-  { week: 4, title: 'Real-world Projects',  hours: '6–10 hours', tags: ['Portfolio Project', 'Debugging', 'Deployment'] },
+  { week: 1, title: 'Security Foundations',  hours: '4–6 hours',  tags: ['Core Concepts', 'Lab Setup', 'Threat Landscape'] },
+  { week: 2, title: 'Networks & Web',        hours: '5–7 hours',  tags: ['Traffic Analysis', 'Web Vulnerabilities', 'Best Practices'] },
+  { week: 3, title: 'Offensive Techniques',  hours: '6–8 hours',  tags: ['Exploitation', 'Privilege Escalation', 'Reporting'] },
+  { week: 4, title: 'Defense & Response',    hours: '6–10 hours', tags: ['Detection', 'Incident Response', 'Hardening'] },
 ]
 
 function readOnboarding() {

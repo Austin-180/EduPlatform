@@ -3,24 +3,24 @@ import { motion } from 'framer-motion'
 import { useLanguage } from '../context/LanguageContext.jsx'
 
 const LEARN_ITEMS = [
-  'Core concepts and fundamentals',
-  'Hands-on projects and practical applications',
-  'Best practices and industry standards',
-  'Real-world problem-solving techniques',
+  'Core security concepts and the threat landscape',
+  'Hands-on labs and attack/defense exercises',
+  'Industry frameworks and best practices (OWASP, NIST)',
+  'Real-world incident response and problem-solving',
 ]
 
 const LEVEL_META = {
-  Beginner:     { track: 'Foundational programming', difficulty: 'Foundational', duration: '12–16 weeks' },
-  Intermediate: { track: 'Intermediate programming', difficulty: 'Intermediate', duration: '8–12 weeks'  },
-  Advanced:     { track: 'Advanced programming',     difficulty: 'Advanced',     duration: '6–10 weeks'  },
+  Beginner:     { track: 'Foundational security', difficulty: 'Foundational', duration: '12–16 weeks' },
+  Intermediate: { track: 'Intermediate security', difficulty: 'Intermediate', duration: '8–12 weeks'  },
+  Advanced:     { track: 'Offensive & defensive security', difficulty: 'Advanced', duration: '6–10 weeks'  },
 }
 
 const FALLBACK = {
   difficulty: 'Foundational',
-  track:      'Foundational programming',
+  track:      'Foundational security',
   duration:   '12–16 weeks',
   weeklyTime: '1–3 hours/week',
-  goals:      'Build a strong foundation in programming and develop practical coding skills.',
+  goals:      'Build a strong security foundation and develop practical defensive and offensive skills.',
 }
 
 function readOnboarding() {
